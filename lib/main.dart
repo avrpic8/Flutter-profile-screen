@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -31,6 +32,16 @@ class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Pofile Screen'),
+        actions: [
+          Icon(CupertinoIcons.chat_bubble),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(8, 0, 16, 0),
+            child: Icon(CupertinoIcons.ellipsis_vertical),
+          )
+        ],
+      ),
       body: Center(
         child: Text('Hello World'),
       ),
