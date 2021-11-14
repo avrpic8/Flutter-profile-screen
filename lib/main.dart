@@ -1,53 +1,51 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+//import 'app_theme.dart';
+import 'skills.dart';
 
 void main() {
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   // This widget is the root of your application.
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  ThemeMode _themeMode = ThemeMode.dark;
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
-        primaryColor: Colors.pink.shade400,
-        brightness: Brightness.dark,
-        scaffoldBackgroundColor: Color.fromARGB(255, 30, 30, 30),
-        appBarTheme: AppBarTheme(backgroundColor: Colors.black),
-        textTheme: GoogleFonts.latoTextTheme(
-          TextTheme(
-            bodyText2: TextStyle(fontSize: 15),
-            bodyText1: TextStyle(
-                fontSize: 13, color: Color.fromARGB(200, 255, 255, 255)),
-            headline6: TextStyle(fontWeight: FontWeight.w200),
-            subtitle1: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-          ),
-        ),
+      theme: _themeMode == ThemeMode.dark
+          ? MyAppThemeConfig.dark().getTheme()
+          : MyAppThemeConfig.light().getTheme(),
+      home: MyHomePage(
+        toggleThemeMode: () {
+          setState(() {
+            if (_themeMode == ThemeMode.dark)
+              _themeMode = ThemeMode.light;
+            else
+              _themeMode = ThemeMode.dark;
+          });
+        },
       ),
-      home: MyHomePage(),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
+  final Function() toggleThemeMode;
+
+  const MyHomePage({Key? key, required this.toggleThemeMode}) : super(key: key);
+
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
-
-enum SkillsType { photoshop, xd, illustrator, afterEffect, lightRoom }
 
 class _MyHomePageState extends State<MyHomePage> {
   SkillsType skill = SkillsType.photoshop;
@@ -60,17 +58,22 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text('Profile screen'),
-          actions: [
-            Icon(CupertinoIcons.chat_bubble),
-            Padding(
+      appBar: AppBar(
+        title: Text('Profile screen'),
+        actions: [
+          Icon(CupertinoIcons.chat_bubble),
+          InkWell(
+            onTap: widget.toggleThemeMode,
+            child: Padding(
               padding: const EdgeInsets.fromLTRB(8, 0, 16, 0),
               child: Icon(CupertinoIcons.ellipsis_vertical),
-            )
-          ],
-        ),
-        body: Column(
+            ),
+          )
+        ],
+      ),
+      body: SingleChildScrollView(
+        physics: BouncingScrollPhysics(),
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
@@ -216,64 +219,115 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                 ],
               ),
-            )
+            ),
+            Divider(),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(32, 12, 23, 12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Personal Information',
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyText2
+                        ?.copyWith(fontWeight: FontWeight.w900),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  TextField(
+                    decoration: InputDecoration(
+                      labelText: 'Email',
+                      prefixIcon: Icon(CupertinoIcons.at),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 8,
+                  ),
+                  TextField(
+                    decoration: InputDecoration(
+                      labelText: 'Password',
+                      prefixIcon: Icon(CupertinoIcons.lock),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 8,
+                  ),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 48,
+                    child:
+                        ElevatedButton(onPressed: () {}, child: Text('Save')),
+                  ),
+                ],
+              ),
+            ),
           ],
-        ));
+        ),
+      ),
+    );
   }
 }
 
-class Skills extends StatelessWidget {
-  final SkillsType type;
-  final String title;
-  final String imagePath;
-  final Color shadowColor;
-  final bool isActive;
-  final Function() onTap;
+class MyAppThemeConfig {
+  final Color primaryColor = Colors.pink.shade400;
 
-  const Skills({
-    Key? key,
-    required this.title,
-    required this.imagePath,
-    required this.shadowColor,
-    required this.isActive,
-    required this.type,
-    required this.onTap,
-  }) : super(key: key);
+  final Color primaryTextColor;
+  final Color secondryTextColor;
+  final Color surfaceColor;
+  final Color backGroundColor;
+  final Color appBarColor;
+  final Brightness brightness;
 
-  @override
-  Widget build(BuildContext context) {
-    final BorderRadius radius = BorderRadius.circular(12);
-    return InkWell(
-      borderRadius: radius,
-      onTap: onTap,
-      child: Container(
-        width: 110,
-        height: 110,
-        decoration: isActive
-            ? BoxDecoration(
-                color: Colors.white10,
-                borderRadius: BorderRadius.circular(12),
-              )
-            : null,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              decoration: isActive ? BoxDecoration(boxShadow: [
-                BoxShadow(color: shadowColor.withOpacity(0.5), blurRadius: 20),
-              ]) : null,
-              child: Image.asset(
-                imagePath,
-                width: 40,
-                height: 40,
-              ),
-            ),
-            SizedBox(
-              height: 8,
-            ),
-            Text(title)
-          ],
+  MyAppThemeConfig.dark()
+      : primaryTextColor = Colors.white,
+        secondryTextColor = Colors.white70,
+        surfaceColor = Color(0x0dffffff),
+        backGroundColor = Color.fromARGB(255, 30, 30, 30),
+        appBarColor = Colors.black,
+        brightness = Brightness.dark;
+
+  MyAppThemeConfig.light()
+      : primaryTextColor = Colors.grey.shade900,
+        secondryTextColor = Colors.grey.shade900.withOpacity(0.8),
+        surfaceColor = Color(0x0d000000),
+        backGroundColor = Colors.white,
+        appBarColor = Color.fromARGB(255, 235, 235, 235),
+        brightness = Brightness.light;
+
+  ThemeData getTheme() {
+    return ThemeData(
+      primarySwatch: Colors.blue,
+      primaryColor: primaryColor,
+      brightness: brightness,
+      scaffoldBackgroundColor: backGroundColor,
+      appBarTheme: AppBarTheme(
+        elevation: 0,
+        backgroundColor: appBarColor,
+        foregroundColor: primaryTextColor,
+      ),
+      textTheme: GoogleFonts.latoTextTheme(
+        TextTheme(
+          bodyText2: TextStyle(fontSize: 15, color: primaryTextColor),
+          bodyText1: TextStyle(fontSize: 13, color: secondryTextColor),
+          headline6:
+              TextStyle(fontWeight: FontWeight.w200, color: primaryColor),
+          subtitle1: TextStyle(
+              fontSize: 16, fontWeight: FontWeight.bold, color: primaryColor),
         ),
+      ),
+      inputDecorationTheme: InputDecorationTheme(
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide.none,
+        ),
+        filled: true,
+        fillColor: surfaceColor,
+      ),
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all(Colors.pink.shade300)),
       ),
     );
   }
