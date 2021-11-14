@@ -258,10 +258,15 @@ class Skills extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset(
-              imagePath,
-              width: 40,
-              height: 40,
+            Container(
+              decoration: isActive ? BoxDecoration(boxShadow: [
+                BoxShadow(color: shadowColor.withOpacity(0.5), blurRadius: 20),
+              ]) : null,
+              child: Image.asset(
+                imagePath,
+                width: 40,
+                height: 40,
+              ),
             ),
             SizedBox(
               height: 8,
