@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-//import 'app_theme.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'app_theme.dart';
 import 'skills.dart';
 
 void main() {
@@ -17,13 +18,24 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   ThemeMode _themeMode = ThemeMode.dark;
 
+  // default language code;
+  Locale _locale = Locale('fa');
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
+      localizationsDelegates: [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: AppLocalizations.supportedLocales,
+      locale: _locale,
       theme: _themeMode == ThemeMode.dark
-          ? MyAppThemeConfig.dark().getTheme()
-          : MyAppThemeConfig.light().getTheme(),
+          ? MyAppThemeConfig.dark().getTheme(_locale.languageCode)
+          : MyAppThemeConfig.light().getTheme(_locale.languageCode),
       home: MyHomePage(
         toggleThemeMode: () {
           setState(() {
@@ -33,6 +45,12 @@ class _MyAppState extends State<MyApp> {
               _themeMode = ThemeMode.dark;
           });
         },
+        changeLanguage: (Language selectedLanguage) {
+          setState(() {
+            _locale =
+                selectedLanguage == Language.en ? Locale('en') : Locale('fa');
+          });
+        },
       ),
     );
   }
@@ -40,8 +58,13 @@ class _MyAppState extends State<MyApp> {
 
 class MyHomePage extends StatefulWidget {
   final Function() toggleThemeMode;
+  final Function(Language language) changeLanguage;
 
-  const MyHomePage({Key? key, required this.toggleThemeMode}) : super(key: key);
+  const MyHomePage({
+    Key? key,
+    required this.toggleThemeMode,
+    required this.changeLanguage,
+  }) : super(key: key);
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
@@ -49,17 +72,30 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   SkillsType skill = SkillsType.photoshop;
+  Language _language = Language.en;
+
   void updateSelectedSkill(SkillsType skillsType) {
     setState(() {
       this.skill = skillsType;
     });
   }
 
+  void _updateAppLanguage(Language language) {
+    widget.changeLanguage(_language);
+    setState(() {
+      _language = language;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: Text('Profile screen'),
+        title: Text(
+          localizations.profileTitle,
+          style: Theme.of(context).textTheme.headline6?.copyWith(fontSize: 18),
+        ),
         actions: [
           Icon(CupertinoIcons.chat_bubble),
           InkWell(
@@ -96,13 +132,13 @@ class _MyHomePageState extends State<MyHomePage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Saeed Razazzadeh',
+                          localizations.personName,
                           style: Theme.of(context).textTheme.subtitle1,
                         ),
                         SizedBox(
                           height: 2,
                         ),
-                        Text('Mobile, Web programmer'),
+                        Text(localizations.job),
                         SizedBox(
                           height: 8,
                         ),
@@ -116,7 +152,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             ),
                             SizedBox(width: 3),
                             Text(
-                              'Iran,Esfahan',
+                              localizations.location,
                               style: Theme.of(context).textTheme.caption,
                             )
                           ],
@@ -134,22 +170,56 @@ class _MyHomePageState extends State<MyHomePage> {
             Padding(
               padding: const EdgeInsets.fromLTRB(32, 0, 32, 16),
               child: Text(
-                'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute ',
+                localizations.summary,
                 style: Theme.of(context).textTheme.bodyText1,
               ),
             ),
-            Divider(),
+            Divider(
+              color: Theme.of(context).dividerColor,
+              thickness: 1,
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(32, 12, 32, 0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    localizations.selectedLanguage,
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyText2
+                        ?.copyWith(fontWeight: FontWeight.w700),
+                  ),
+                  CupertinoSlidingSegmentedControl<Language>(
+                    groupValue: _language,
+                    children: {
+                      Language.en: Text(
+                        localizations.enLanguage,
+                        style: TextStyle(fontSize: 12),
+                      ),
+                      Language.fa: Text(
+                        localizations.falanguage,
+                        style: TextStyle(fontSize: 12),
+                      )
+                    },
+                    onValueChanged: (value) {
+                      _updateAppLanguage(value!);
+                    },
+                  )
+                ],
+              ),
+            ),
             Padding(
               padding: const EdgeInsets.fromLTRB(32, 16, 32, 12),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
-                    'Skills',
+                    localizations.skills,
                     style: Theme.of(context)
                         .textTheme
                         .bodyText2
-                        ?.copyWith(fontWeight: FontWeight.w900),
+                        ?.copyWith(fontWeight: FontWeight.w700),
                   ),
                   SizedBox(
                     width: 4,
@@ -220,7 +290,10 @@ class _MyHomePageState extends State<MyHomePage> {
                 ],
               ),
             ),
-            Divider(),
+            Divider(
+              color: Theme.of(context).dividerColor,
+              thickness: 1,
+            ),
             Padding(
               padding: const EdgeInsets.fromLTRB(32, 12, 23, 12),
               child: Column(
@@ -270,65 +343,4 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-class MyAppThemeConfig {
-  final Color primaryColor = Colors.pink.shade400;
-
-  final Color primaryTextColor;
-  final Color secondryTextColor;
-  final Color surfaceColor;
-  final Color backGroundColor;
-  final Color appBarColor;
-  final Brightness brightness;
-
-  MyAppThemeConfig.dark()
-      : primaryTextColor = Colors.white,
-        secondryTextColor = Colors.white70,
-        surfaceColor = Color(0x0dffffff),
-        backGroundColor = Color.fromARGB(255, 30, 30, 30),
-        appBarColor = Colors.black,
-        brightness = Brightness.dark;
-
-  MyAppThemeConfig.light()
-      : primaryTextColor = Colors.grey.shade900,
-        secondryTextColor = Colors.grey.shade900.withOpacity(0.8),
-        surfaceColor = Color(0x0d000000),
-        backGroundColor = Colors.white,
-        appBarColor = Color.fromARGB(255, 235, 235, 235),
-        brightness = Brightness.light;
-
-  ThemeData getTheme() {
-    return ThemeData(
-      primarySwatch: Colors.blue,
-      primaryColor: primaryColor,
-      brightness: brightness,
-      scaffoldBackgroundColor: backGroundColor,
-      appBarTheme: AppBarTheme(
-        elevation: 0,
-        backgroundColor: appBarColor,
-        foregroundColor: primaryTextColor,
-      ),
-      textTheme: GoogleFonts.latoTextTheme(
-        TextTheme(
-          bodyText2: TextStyle(fontSize: 15, color: primaryTextColor),
-          bodyText1: TextStyle(fontSize: 13, color: secondryTextColor),
-          headline6:
-              TextStyle(fontWeight: FontWeight.w200, color: primaryColor),
-          subtitle1: TextStyle(
-              fontSize: 16, fontWeight: FontWeight.bold, color: primaryColor),
-        ),
-      ),
-      inputDecorationTheme: InputDecorationTheme(
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-          borderSide: BorderSide.none,
-        ),
-        filled: true,
-        fillColor: surfaceColor,
-      ),
-      elevatedButtonTheme: ElevatedButtonThemeData(
-        style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all(Colors.pink.shade300)),
-      ),
-    );
-  }
-}
+enum Language { en, fa }

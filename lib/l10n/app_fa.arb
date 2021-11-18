@@ -1,6 +1,17 @@
 {
-    "helloWorld": "Hello World!",
-    "@helloWorld": {
-      "description": "The conventional newborn programmer greeting"
-    }
+  "profileTitle": "صفحه پروفایل",
+  "personName": "سعید رزاززاده",
+  "job": "برنامه نویس موبایل و وب",
+  "location": "ایران- اصفهان",
+  "summary": " و دشواری موجود در ارائه راهکارها، و شرایط سخت تایپ به پایان رسد و زمان مورد نیاز شامل حروفچینی دستاوردهای اصلی،.",
+  "selectedLanguage": "انتخاب زبان",
+  "enLanguage": "انگلیسی",
+  "falanguage": "فارسی",
+  "skills": "مهارت ها",
+  "personalInformation": "اطلاعات شخصی",
+  "email": "ایمیل",
+  "password": "رمز عبور",
+  "save": "ذخیره"
+  
+
 }

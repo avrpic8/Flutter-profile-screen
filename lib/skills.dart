@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 enum SkillsType { photoshop, xd, illustrator, afterEffect, lightRoom }
 
 class Skills extends StatelessWidget {
+  
   final SkillsType type;
   final String title;
   final String imagePath;
@@ -31,7 +32,7 @@ class Skills extends StatelessWidget {
         height: 110,
         decoration: isActive
             ? BoxDecoration(
-                color: Colors.white10,
+                color: Theme.of(context).dividerColor,
                 borderRadius: BorderRadius.circular(12),
               )
             : null,
@@ -39,9 +40,12 @@ class Skills extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              decoration: isActive ? BoxDecoration(boxShadow: [
-                BoxShadow(color: shadowColor.withOpacity(0.5), blurRadius: 20),
-              ]) : null,
+              decoration: isActive
+                  ? BoxDecoration(boxShadow: [
+                      BoxShadow(
+                          color: shadowColor.withOpacity(0.5), blurRadius: 20),
+                    ])
+                  : null,
               child: Image.asset(
                 imagePath,
                 width: 40,
