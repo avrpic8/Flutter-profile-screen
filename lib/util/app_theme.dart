@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class MyAppThemeConfig {
-  static const String FA_PRIMARY_FONT = "Iranyekan";
+  static const String FA_PRIMARY_FONT = "Iransanse";
   final Color primaryColor = Colors.pink.shade400;
   final Color primaryTextColor;
   final Color secondryTextColor;
@@ -59,8 +59,10 @@ class MyAppThemeConfig {
         TextTheme(
           bodyText2: TextStyle(fontSize: 15, color: primaryTextColor),
           bodyText1: TextStyle(fontSize: 13, color: secondryTextColor),
-          headline6:
-              TextStyle(fontWeight: FontWeight.w200, color: primaryColor),
+          headline6: TextStyle(
+            fontWeight: FontWeight.w600,
+            color: primaryTextColor,
+          ),
           subtitle1: TextStyle(
               fontSize: 16, fontWeight: FontWeight.bold, color: primaryColor),
         ),
