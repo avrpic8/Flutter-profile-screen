@@ -70,9 +70,9 @@ class MyAppThemeConfig {
 
   TextTheme get faPrimaryFont => TextTheme(
         bodyText2: TextStyle(
-            fontSize: 15, color: primaryTextColor, fontFamily: FA_PRIMARY_FONT),
+            fontSize: 13, color: primaryTextColor, fontFamily: FA_PRIMARY_FONT),
         bodyText1: TextStyle(
-            fontSize: 13,
+            fontSize: 12,
             color: secondryTextColor,
             fontFamily: FA_PRIMARY_FONT),
         caption: TextStyle(
@@ -84,7 +84,7 @@ class MyAppThemeConfig {
             color: primaryTextColor,
             fontFamily: FA_PRIMARY_FONT),
         subtitle1: TextStyle(
-            fontSize: 16,
+            fontSize: 14,
             fontWeight: FontWeight.bold,
             color: primaryColor,
             fontFamily: FA_PRIMARY_FONT),
